@@ -14,7 +14,9 @@ export default function CheckinPage() {
   const [deviceId, setDeviceId] = useState(null);
 
   useEffect(() => {
-    fetch("/api/teachers/public", { cache: "no-store", next: { revalidate: 0 } })
+    fetch(`/api/teachers/public?t=${Date.now()}`, { 
+      cache: "no-store",
+    })
       .then((r) => r.json())
       .then((d) => setTeachers(d.teachers || []));
 
