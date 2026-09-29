@@ -31,6 +31,7 @@ export async function GET() {
       },
     }
  );
+}
 //   const sorted = [...data].sort((a, b) => a.name.localeCompare(b.name));
 
 //   return NextResponse.json(
