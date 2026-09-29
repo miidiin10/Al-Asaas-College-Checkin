@@ -22,15 +22,24 @@ export async function GET() {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  const sorted = [...data].sort((a, b) => a.name.localeCompare(b.name));
+  // 2. ADD THESE HEADERS to block Vercel/Browser caching
+  return Response.json(
+    { teachers: data }, 
+    {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+      },
+    }
+ );
+//   const sorted = [...data].sort((a, b) => a.name.localeCompare(b.name));
 
-  return NextResponse.json(
-    { teachers: sorted },
-    // Cached at Vercel's edge briefly (stale-while-revalidate keeps serving
-    // slightly-stale data for a short window while a fresh copy is fetched
-    // in the background). Short enough that admin changes show up quickly,
-    // long enough to meaningfully cut down repeated database hits during
-    // a busy check-in rush.
-    { headers: { "Cache-Control": "public, s-maxage=8, stale-while-revalidate=20" } }
-  );
-}
+//   return NextResponse.json(
+//     { teachers: sorted },
+//     // Cached at Vercel's edge briefly (stale-while-revalidate keeps serving
+//     // slightly-stale data for a short window while a fresh copy is fetched
+//     // in the background). Short enough that admin changes show up quickly,
+//     // long enough to meaningfully cut down repeated database hits during
+//     // a busy check-in rush.
+//     { headers: { "Cache-Control": "public, s-maxage=8, stale-while-revalidate=20" } }
+//   );
+// }
