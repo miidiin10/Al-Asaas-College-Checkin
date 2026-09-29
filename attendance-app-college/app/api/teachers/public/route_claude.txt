@@ -16,8 +16,9 @@ export async function GET() {
   // JS after the fact sidesteps it entirely.
   const { data, error } = await supabaseAdmin
     .from("teachers")
-    .select("id, name")
+    .select('id, name, active')
     .eq("active", true);
+
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
