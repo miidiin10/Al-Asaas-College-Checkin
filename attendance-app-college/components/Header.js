@@ -10,7 +10,7 @@
 // filename stays "logo.jpg" either way, they'd otherwise keep serving the
 // OLD image bytes indefinitely even after a redeploy. Appending ?v=N
 // forces every cache to treat it as a brand new file.
-const LOGO_VERSION = "2";
+const LOGO_VERSION = "3";
 
 export default function Header() {
   const schoolName = process.env.NEXT_PUBLIC_SCHOOL_NAME || "Al-Asaas Schools";
