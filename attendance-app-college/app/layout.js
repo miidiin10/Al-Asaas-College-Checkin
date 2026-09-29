@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
               <img 
                 src="/logo.jpg" 
                 alt="Al-asaas College" 
-                className="h-10 w-auto object-contain"
+                className="h-20 w-auto max-w-full object-contain"
               />
               <span className="font-bold text-slate-800 text-lg hidden sm:inline">
                 Attendance
