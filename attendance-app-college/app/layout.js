@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
               <img 
                 src="/logo.jpg" 
                 alt="Al-asaas College" 
-                className="h-32 w-auto max-w-full object-contain"
+                className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-sm shrink-0"
               />
               
             </a>
