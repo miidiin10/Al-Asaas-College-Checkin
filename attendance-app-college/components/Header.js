@@ -4,10 +4,19 @@
 // future clone of this app. A different school that hasn't set its own
 // NEXT_PUBLIC_LOGO_URL yet gets the neutral initials circle instead, never
 // someone else's logo by accident.
+//
+// Bump LOGO_VERSION any time you replace the contents of public/logo.jpg.
+// Browsers and Vercel's edge cache static files by URL - since the
+// filename stays "logo.jpg" either way, they'd otherwise keep serving the
+// OLD image bytes indefinitely even after a redeploy. Appending ?v=N
+// forces every cache to treat it as a brand new file.
+const LOGO_VERSION = "2";
+
 export default function Header() {
   const schoolName = process.env.NEXT_PUBLIC_SCHOOL_NAME || "Al-Asaas Schools";
   const isDefaultSchool = !process.env.NEXT_PUBLIC_SCHOOL_NAME || schoolName === "Al-Asaas Schools";
-  const logoUrl = process.env.NEXT_PUBLIC_LOGO_URL || (isDefaultSchool ? "/logo.jpg" : null);
+  const logoUrl =
+    process.env.NEXT_PUBLIC_LOGO_URL || (isDefaultSchool ? `/logo.jpg?v=${LOGO_VERSION}` : null);
 
   if (logoUrl) {
     return (

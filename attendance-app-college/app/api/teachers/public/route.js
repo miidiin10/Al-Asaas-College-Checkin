@@ -25,11 +25,11 @@ export async function GET() {
 
   return NextResponse.json(
     { teachers: sorted },
-    // Cached at Vercel's edge for 30s (stale-while-revalidate keeps serving
-    // slightly-stale data for up to 2 more minutes while a fresh copy is
-    // fetched in the background). This is read-only, low-urgency data -
-    // a newly added teacher may take up to ~30s to appear, in exchange for
-    // far fewer repeated database hits during busy check-in periods.
-    { headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120" } }
+    // Cached at Vercel's edge briefly (stale-while-revalidate keeps serving
+    // slightly-stale data for a short window while a fresh copy is fetched
+    // in the background). Short enough that admin changes show up quickly,
+    // long enough to meaningfully cut down repeated database hits during
+    // a busy check-in rush.
+    { headers: { "Cache-Control": "public, s-maxage=8, stale-while-revalidate=20" } }
   );
 }
