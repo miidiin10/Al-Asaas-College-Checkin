@@ -16,11 +16,14 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const date = searchParams.get("date") || todayInLagos();
 
-  // Not using .order() here - unreliable on this project. Sort in JS instead.
+  // ✅ ADDED: .eq('teachers.active', true) 
+  // This ensures that if a teacher is deleted (set to active=false), 
+  // they immediately disappear from the daily check-in list.
   const { data: rawData, error } = await supabaseAdmin
     .from("attendance")
-    .select("checkin_time, lat, lng, teachers(name)")
-    .eq("checkin_date", date);
+    .select("checkin_time, lat, lng, teachers(name, active)") // <-- Added 'active' here
+    .eq("checkin_date", date)
+    .eq("teachers.active", true); // <-- Filters out deleted teachers
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
@@ -31,5 +34,13 @@ export async function GET(req) {
     hasLocation: row.lat !== null && row.lng !== null,
   }));
 
-  return NextResponse.json({ date, rows });
+  // ✅ ADDED: Cache-Control headers to force fresh data every time
+  return NextResponse.json(
+    { date, rows },
+    {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      },
+    }
+  );
 }
