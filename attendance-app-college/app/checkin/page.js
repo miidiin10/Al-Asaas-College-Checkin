@@ -6,6 +6,7 @@ export default function CheckinPage() {
   const [teacherId, setTeacherId] = useState("");
   const [pin, setPin] = useState("");
   const [status, setStatus] = useState(null); // { type: 'success'|'error', message }
+  const [debugInfo, setDebugInfo] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [coords, setCoords] = useState(null);
@@ -62,6 +63,7 @@ export default function CheckinPage() {
         }),
       });
       const data = await res.json();
+      setDebugInfo(data._debug || null);
       if (!res.ok) {
         setStatus({ type: "error", message: data.error });
       } else {
@@ -128,6 +130,12 @@ export default function CheckinPage() {
         >
           {status.message}
         </p>
+      )}
+
+      {debugInfo && (
+        <pre className="text-[10px] text-slate-400 bg-slate-50 rounded-lg p-2 overflow-x-auto whitespace-pre-wrap">
+          {JSON.stringify(debugInfo, null, 2)}
+        </pre>
       )}
 
       {locError && <p className="text-center text-xs text-slate-400">{locError}</p>}

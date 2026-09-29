@@ -69,10 +69,21 @@ export async function POST(req) {
 
     // Optional geofence - only enforced if at least one zone is configured.
     const zones = getSchoolZones();
+    // TEMPORARY diagnostics - remove once the location issue is resolved.
+    const debugBase = {
+      zonesConfigured: zones.length,
+      zonesRaw: zones,
+      receivedLat: lat,
+      receivedLng: lng,
+      receivedLatType: typeof lat,
+    };
     if (zones.length > 0) {
       if (typeof lat !== "number" || typeof lng !== "number") {
         return NextResponse.json(
-          { error: "Location is required to check in. Please allow location access and try again." },
+          {
+            error: "Location is required to check in. Please allow location access and try again.",
+            _debug: debugBase,
+          },
           { status: 400 }
         );
       }
@@ -88,6 +99,7 @@ export async function POST(req) {
         return NextResponse.json(
           {
             error: `You don't appear to be at an approved check-in location. (Measured ${nearest}m away from the nearest approved zone.)`,
+            _debug: { ...debugBase, distanceToNearestZoneMeters: nearest },
           },
           { status: 403 }
         );
@@ -137,7 +149,10 @@ export async function POST(req) {
           .single();
         if (existing) {
           return NextResponse.json(
-            { error: `You already checked in today at ${formatTimeInLagos(existing.checkin_time)}.` },
+            {
+              error: `You already checked in today at ${formatTimeInLagos(existing.checkin_time)}.`,
+              _debug: debugBase,
+            },
             { status: 409 }
           );
         }
@@ -155,10 +170,17 @@ export async function POST(req) {
       .eq("checkin_date", date)
       .lte("checkin_time", inserted.checkin_time);
 
+    // TEMPORARY diagnostics - remove once the location issue is resolved.
+    const distanceToNearestZoneMeters =
+      zones.length > 0 && typeof lat === "number" && typeof lng === "number"
+        ? Math.round(Math.min(...zones.map((z) => distanceMeters(z.lat, z.lng, lat, lng))))
+        : null;
+
     return NextResponse.json({
       name: teacher.name,
       time: formatTimeInLagos(inserted.checkin_time),
       rank: count || 1,
+      _debug: { ...debugBase, distanceToNearestZoneMeters },
     });
   } catch (err) {
     console.error(err);
