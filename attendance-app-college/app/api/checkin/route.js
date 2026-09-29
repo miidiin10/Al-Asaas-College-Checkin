@@ -9,7 +9,16 @@ const LOCKOUT_MINUTES = Number(process.env.PIN_LOCKOUT_MINUTES) || 10;
 
 export async function POST(req) {
   try {
-    const { teacherId, pin, lat, lng, deviceId } = await req.json();
+    const { teacherId, pin, lat, lng, accuracy, deviceId } = await req.json();
+    if (accuracy && accuracy > 100) {
+  return Response.json(
+    { 
+      error: `GPS signal too weak (accuracy: ${Math.round(accuracy)}m). Please ensure you are at the school with a clear view of the sky, or check your device's location settings.`,
+      _debug: { receivedAccuracy: accuracy }
+    }, 
+    { status: 400 }
+  );
+}
     if (!teacherId || !pin) {
       return NextResponse.json({ error: "Missing teacher or PIN." }, { status: 400 });
     }
