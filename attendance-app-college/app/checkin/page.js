@@ -20,7 +20,7 @@ export default function CheckinPage() {
 
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude, accuracy: pos.coords.accuracy }),
         () => setLocError("Location unavailable - allow location access if check-in fails."),
         // maximumAge: 0 forces a fresh reading rather than reusing a stale
         // cached position (which can be from a completely different place).
@@ -59,6 +59,7 @@ export default function CheckinPage() {
           pin,
           lat: coords?.lat,
           lng: coords?.lng,
+          accuracy: coords?.accuracy,
           deviceId,
         }),
       });
