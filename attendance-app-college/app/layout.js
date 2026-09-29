@@ -22,9 +22,7 @@ export default function RootLayout({ children }) {
                 alt="Al-asaas College" 
                 className="h-32 w-auto max-w-full object-contain"
               />
-              <span className="font-bold text-slate-800 text-lg hidden sm:inline">
-                Attendance
-              </span>
+              
             </a>
           </div>
         </header>
