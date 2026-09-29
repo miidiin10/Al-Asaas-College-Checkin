@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="min-h-screen text-slate-900">
         <div className="max-w-md mx-auto p-4">
-          <Header />
+        
 	<header className="bg-white border-b border-slate-200 py-4 px-4 shadow-sm sticky top-0 z-10">
           <div className="max-w-lg mx-auto flex items-center justify-center">
             <a href="/" className="flex items-center gap-2 hover:opacity-80 transition">
