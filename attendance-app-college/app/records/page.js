@@ -5,10 +5,11 @@ export default function RecordsPage() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch("/api/records")
-      .then((r) => r.json())
-      .then(setData);
-  }, []);
+  const timestamp = new Date().getTime();
+  fetch(`/api/record?t=${timestamp}`, { cache: "no-store" })
+    .then((r) => r.json())
+    .then(setData);
+}, []);
 
   if (!data) {
     return (
